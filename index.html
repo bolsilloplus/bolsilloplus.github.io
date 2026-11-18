@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolsillo+</title>
+<meta name="description" content="Bolsillo+ es una app gratuita para ordenar tus gastos del mes, tus tarjetas y tus cuentas compartidas.">
+<meta name="theme-color" content="#17644A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon-64.png">
+<link rel="apple-touch-icon" href="icono-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F3EE;--v:#17644A;--v2:#E3EFE9;--t:#1F2A24;--mu:#6B7268;--b:#E2DED3;--w:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:var(--t);font-size:15px;line-height:1.5}
+main{max-width:430px;margin:0 auto;padding:24px 18px 32px;min-height:100vh;display:flex;flex-direction:column}
+.logo{width:130px;margin:24px auto 4px;display:block}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:34px;text-align:center;margin:0;color:#0B4434}
+h1 b{color:#3E8B66;font-weight:600}
+.sub{text-align:center;color:var(--mu);margin:6px 0 22px}
+.btn{display:block;width:100%;text-align:center;text-decoration:none;background:var(--v);color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn2{display:block;width:100%;text-align:center;background:transparent;color:var(--v);border:1px solid var(--v);border-radius:12px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:10px}
+.card{background:var(--w);border:1px solid var(--b);border-radius:14px;padding:14px 16px;margin:18px 0 0}
+.card h2{font-size:15px;margin:0 0 6px;font-weight:600}
+.card p{margin:0;color:var(--mu);font-size:14px}
+ul{margin:8px 0 0;padding-left:18px;color:var(--mu);font-size:14px}
+footer{margin-top:auto;padding-top:28px;text-align:center;font-size:13px}
+footer a{color:var(--v)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="logo.svg" alt="Logo de Bolsillo+">
+  <h1>Bolsillo<b>+</b></h1>
+  <p class="sub">Tus gastos del mes, tus tarjetas y lo que compartís, en un solo lugar.</p>
+
+  <a class="btn" id="entrar" href="#">Entrar a Bolsillo+</a>
+
+  <div class="card" id="instalar">
+    <h2>Tenela en tu celular</h2>
+    <p id="txtInstalar">En Chrome, tocá el menú <b>⋮</b> y elegí <b>Agregar a pantalla principal</b>. Te queda el ícono de Bolsillo+ junto a tus apps.</p>
+    <button class="btn2" id="btnInstalar" hidden>Agregar a la pantalla principal</button>
+  </div>
+
+  <div class="card">
+    <h2>Qué es Bolsillo+</h2>
+    <ul>
+      <li>Cargás tus gastos, fijos y tarjetas, y ves cuánto te queda libre en el mes.</li>
+      <li>Tus datos quedan en una planilla en <b>tu propio Google Drive</b>. Nadie más la ve.</li>
+      <li>Si querés, lee tus mails de avisos de pago y resúmenes de tarjeta. Solo lee: no borra, no mueve ni manda nada.</li>
+      <li>Es gratis.</li>
+    </ul>
+  </div>
+
+  <footer><a href="privacidad.html">Política de privacidad</a></footer>
+</main>
+<script>
+var APP = 'https://script.google.com/macros/s/AKfycbzh-3JBhSS3h9ZB_2zvRFjXashgkXWmweFfm7hmvivA5NW6gnRWIc6DFVHFAmUT_FjmVA/exec';
+document.getElementById('entrar').href = APP;
+
+var instalada = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+if (instalada) {
+  document.getElementById('instalar').hidden = true;
+  var ya = false;
+  try { ya = sessionStorage.getItem('bp_abierta') === '1'; sessionStorage.setItem('bp_abierta', '1'); } catch (e) {}
+  if (!ya) location.replace(APP);
+}
+
+var aviso = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault();
+  aviso = e;
+  document.getElementById('txtInstalar').textContent = 'Te queda el ícono de Bolsillo+ junto a tus apps.';
+  document.getElementById('btnInstalar').hidden = false;
+});
+document.getElementById('btnInstalar').addEventListener('click', function () {
+  if (!aviso) return;
+  aviso.prompt();
+  aviso = null;
+  this.hidden = true;
+});
+</script>
+</body>
+</html>
